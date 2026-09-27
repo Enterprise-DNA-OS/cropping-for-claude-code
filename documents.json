@@ -1,11 +1,43 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "spray-record",
+    "title": "Spray application record",
+    "for_each": "select id, name from crops where exists (select 1 from applications a where a.crop_id = crops.id)",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Applications",
+        "sql": "select applied_on, start_time, finish_time, product, rate_per_ha, area_ha, total_qty, unit, water_l_ha, target, operator, equipment, wind_kmh, wind_dir, temp_c, harvest_clear, reentry_clear, label_ref from application_register where id in (select id from applications where crop_id = $1) order by applied_on",
+        "note": "Working record for the farm. The label and the rules in your state or region govern the actual application."
+      }
+    ]
+  },
+  {
+    "name": "recommendation",
+    "title": "Agronomy recommendation",
+    "for_each": "select distinct c.id, c.name from crops c join recommendations r on r.crop_id = c.id where r.status = 'open'",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Open recommendations",
+        "sql": "select product, rate_per_ha, unit, qty_needed, stock, due, recommended_by, reason, decision from recommendation_board where crop = (select name from crops where id = $1) and status = 'open' order by due"
+      },
+      {
+        "title": "Label checks before mixing",
+        "sql": "select distinct p.name, p.mode_group, p.whp_days, p.rei_hours, p.max_rate_per_ha, p.label_ref from recommendations r join products p on p.id = r.product_id where r.crop_id = $1 and r.status = 'open'",
+        "note": "Demonstration values. Confirm every figure on the actual label."
+      }
+    ]
+  },
+  {
+    "name": "audit-pack",
+    "title": "Spray and harvest audit pack",
+    "for_each": "select id, name from farms",
+    "file": "name",
+    "sections": [
+      { "title": "Farm", "sql": "select name, country, region, owner, spray_plan_review from farms where id = $1" },
+      { "title": "Spray diary", "sql": "select crop, product, applied_on, start_time, finish_time, rate_per_ha, area_ha, operator, equipment, target, wind_kmh, wind_dir, harvest_clear, record_lag_hours from application_register where farm = (select name from farms where id = $1) order by applied_on" },
+      { "title": "Harvests", "sql": "select c.name crop, h.harvested_on, h.tonnes, h.moisture_pct, h.destination, h.reference from harvests h join crops c on c.id = h.crop_id join fields f on f.id = c.field_id where f.farm_id = $1 order by h.harvested_on", "note": "A working pack for the owner and auditor. It does not certify compliance." }
     ]
   }
 ]

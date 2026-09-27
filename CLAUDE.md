@@ -4,9 +4,9 @@ This file is the brain. Claude Code reads it at the start of every session. It s
 
 ## Who this is for
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
+- **Business:** Yarrabee Demo, a fictional NSW grain farm, and Kowhai Flats Demo in Canterbury. Replace with the real farm, state or region, owner and agronomist before loading real records.
+- **Operator:** Chris, owner and spray operator. Alex is the agronomist.
+- **What matters most:** a spray diary that would stand up to an EPA check, nothing harvested inside a withholding period, and recommendations that actually go on in time.
 
 Fill this in once. A worker with context knows. A worker without it guesses.
 
@@ -22,11 +22,49 @@ Fill this in once. A worker with context knows. A worker without it guesses.
 
 | When the operator asks for... | Use this |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| The morning round | `/attention` |
+| The property book | `/farms` |
+| The field list | `/fields` |
+| This season's crops | `/crops` |
+| One crop before a decision | `/crop` |
+| The spray diary | `/spray-diary` |
+| The agronomist's recommendations against the shed | `/recommendations` |
+| The chemical shed | `/inventory` |
+| Fields closed to re-entry | `/reentry` |
+| Open scouting issues | `/scouting` |
+| The rain gauge | `/rainfall` |
+| Before booking the header | `/harvest-check` |
+| The harvest book | `/harvests` |
+| Recorded gross margin by crop | `/margins` |
+| The work list | `/tasks` |
+| The audit preparation round | `/compliance` |
+| Add a farm, field, product or crop | `/add` |
+| Record a crop in the ground | `/sow` |
+| Write a recommendation | `/recommend` |
+| Record a completed spray or spread | `/spray` |
+| Record what was found walking a crop | `/scout` |
+| Record a harvest load | `/harvest` |
+| Record a rain reading | `/rain` |
+| Add a delivery to the shed | `/shed-delivery` |
+| Record a farm decision | `/log` |
+| Monday farm review | `/weekly-review` |
+| Draft the spray application record | `/draft-spray-record` |
+| Draft the recommendation sheet | `/draft-recommendation` |
+| Draft the audit pack | `/draft-audit` |
+| Bring the Agworld records across | `/import` |
+| Make the records fit this farm | `/customise` |
+| Add a read-only view | `/new-view` |
+| Back up every record | `/export` |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+If an ask fits nothing here, run the CLI directly (`npm run cropping -- help`) and then propose a new command for it.
 
 ## Hard rules
+
+- Never invent a rate, withholding period, re-entry interval or label reference. Missing means missing: ask for the label.
+- Never work around a refused spray or harvest. Say what blocked it and what record would fix it.
+- A record check is not label advice or proof of compliance. docs/compliance.md holds the rules and their sources.
+- Record sprays within 48 hours of the job. Imports start with no recorded time.
+- Export before /customise. Add migrations, never rewrite an applied one. Run npm test after any code or schema change.
 
 - Never send email or messages from here. Draft to `drafts/`, a person sends.
 - Never delete records without an explicit yes in this session. Prefer marking closed or archived.

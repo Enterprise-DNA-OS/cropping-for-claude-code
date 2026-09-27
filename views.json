@@ -1,14 +1,26 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Cropping for Claude Code: what needs attention, rendered by npm run view",
+    "title": "This week on the farm",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Decisions", "sql": "select * from attention_board order by priority, kind, record" },
+      { "title": "Recommendations waiting", "sql": "select crop, product, rate_per_ha, unit, qty_needed, stock, due, decision from recommendation_board where status = 'open' order by due" },
+      { "title": "Fields closed to re-entry", "sql": "select * from reentry_board order by reentry_clear" }
+    ]
+  },
+  {
+    "name": "harvest",
+    "title": "Harvest readiness",
+    "sections": [
+      { "title": "Crops", "sql": "select crop, field, crop_type, harvest_planned, harvest_clear, unknown_hold, decision from harvest_readiness order by harvest_planned nulls last", "note": "A record check only. Confirm withholding periods on the actual labels and your buyer's residue requirements before harvest." }
+    ]
+  },
+  {
+    "name": "margins",
+    "title": "Recorded crop margins",
+    "sections": [
+      { "title": "By crop", "sql": "select * from margin_board order by season desc, crop", "note": "Recorded input costs and harvested tonnes at the price entered on each crop. Excludes machinery, labour, freight, levies and anything not recorded here." },
+      { "title": "Rainfall", "sql": "select * from rainfall_board order by farm" }
     ]
   }
 ]

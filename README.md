@@ -12,7 +12,7 @@
 <table align="center">
   <tr>
     <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Agworld data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=agworld">Book a call</a></td>
+    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Agworld data brought across.<br/><a href="https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=agworld">Book a call</a></td>
     <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/agworld?utm_source=github&utm_medium=readme&utm_campaign=agworld">How it works</a></td>
   </tr>
 </table>
@@ -38,48 +38,127 @@
 
 ## What is this
 
-Cropping for Claude Code does the job you pay Agworld for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Agworld dashboard cannot.
+Cropping for Claude Code is a farm office record system for Australian and New Zealand grain and broadacre growers and the agronomists who work with them. It holds fields, crops by season, the agronomist's recommendations, the spray diary, the chemical shed, scouting notes, rainfall and harvest loads, in a database you own. There is no web front end: you open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor through `AGENTS.md`) and ask in plain words. The demo farms are fictional.
 
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Agworld per year, all in, with a source. -->
+Agworld lists Grower Basic at $1795 a year, Grower Plus at $3195 and Grower Pro at $3995, with Enterprise on request, on its Australian pricing page checked 27 September 2026. The page does not state the currency or GST. Source: [Agworld pricing](https://www.agworld.com/au/pricing/). See [the research notes](docs/research.md).
 
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=agworld).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
+The free version has no licence fee. Agent subscriptions, hosting and your own time remain separate. It does not replace Agworld's maps, phone app, imagery or machinery connections. [The scope is explicit](docs/why-no-front-end.md). Want those built around your farm, or a different stack? That is what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=agworld).
 
 ## Why no front end
 
 - The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+- Your records sit in plain Postgres tables you own. Any tool can read them.
+- No per-operation subscription. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for what a screen gives that this does not.
 
 ## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/cropping-for-claude-code.git
 cd cropping-for-claude-code
 npm install
 npm run demo
+npm test
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Node 20 or newer. No database server, account or credentials. The demo creates Yarrabee, a fictional NSW grain farm with four fields, and a small Canterbury block: a canola crop inside a withholding period, a fungicide recommendation the shed cannot cover, a spray record missing its wind reading, a field closed to re-entry and a harvest load taken too early. Open the folder in Claude Code and run `/attention` first, then `/harvest-check` and `/recommendations`.
 
-### Use it with your own Postgres or Supabase
-
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+For a real farm, use a fresh `DATA_DIR` or set `DATABASE_URL` in `.env` to your own Postgres or Supabase, run `npm run migrate`, add the farm and import its exports. Set the machine and database timezone to the farm's timezone. Never load the demo seed into a real database.
 
 ## The commands
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
-
-| Command | What it does |
+| Command | Weekly job |
 |---|---|
-| `/...` | ... |
+| `/attention` | The morning round |
+| `/farms` | The property book |
+| `/fields` | The field list |
+| `/crops` | This season's crops |
+| `/crop` | One crop before a decision |
+| `/spray-diary` | The spray diary |
+| `/recommendations` | The agronomist's recommendations against the shed |
+| `/inventory` | The chemical shed |
+| `/reentry` | Fields closed to re-entry |
+| `/scouting` | Open scouting issues |
+| `/rainfall` | The rain gauge |
+| `/harvest-check` | Before booking the header |
+| `/harvests` | The harvest book |
+| `/margins` | Recorded gross margin by crop |
+| `/tasks` | The work list |
+| `/compliance` | The audit preparation round |
+| `/add` | Add a farm, field, product or crop |
+| `/sow` | Record a crop in the ground |
+| `/recommend` | Write a recommendation |
+| `/spray` | Record a completed spray or spread |
+| `/scout` | Record what was found walking a crop |
+| `/harvest` | Record a harvest load |
+| `/rain` | Record a rain reading |
+| `/shed-delivery` | Add a delivery to the shed |
+| `/log` | Record a farm decision |
+| `/weekly-review` | Monday farm review |
+| `/draft-spray-record` | Draft the spray application record |
+| `/draft-recommendation` | Draft the recommendation sheet |
+| `/draft-audit` | Draft the audit pack |
+| `/import` | Bring the Agworld records across |
+| `/customise` | Make the records fit this farm |
+| `/new-view` | Add a read-only view |
+| `/export` | Back up every record |
 
-## Instead of agworld
+The CLI ships 36 commands. See [docs/commands.md](docs/commands.md). Human-readable tables by default, `--json` on every command, unique partial names or ids work, and an ambiguous name stops with a list.
 
-<!-- TODO(author): how to bring data across from Agworld; link docs/replace-agworld.md -->
+## Rules that protect the spray diary
+
+- A chemical spray is refused without start and finish time, operator, equipment, target, and wind speed and direction: the fields NSW requires on a pesticide record.
+- A spray is refused for expired product, a rate above the recorded label maximum, more product than the shed holds, or an area bigger than the field. Stock comes off the shed in the same transaction.
+- A spray that pushes a planned harvest inside its withholding period says so straight away.
+- A harvest load is refused while any withholding period is running, or unknown because a spray has no withholding period recorded.
+- Imports check the whole batch and roll it back on any bad row. Replaying the same files adds nothing.
+
+Unknown is not clear. Demonstration products carry made-up rates and intervals. Always confirm with the actual label. Read [docs/compliance.md](docs/compliance.md) for each rule and its source, and which checks are farm policy.
+
+## Ten questions to ask across your crop records
+
+Each is answered today by the command named. Agworld has its own reports and filters; no claim is made that it cannot answer any particular one.
+
+1. Which crops cannot be harvested on their planned date because a withholding period is still running? `harvest-check`
+2. Which spray records were written more than 48 hours after the job finished? `compliance`
+3. Which of the agronomist's recommendations can the shed not cover right now? `recommendations`
+4. Which fields are closed to re-entry right now, and until when? `reentry`
+5. Which chemical sprays are missing wind, operator, equipment or times? `compliance`
+6. What was recommended, is past due and has not gone on? `recommendations`
+7. Which sown crops has nobody walked in the last 14 days? `attention`
+8. Which harvest loads came off before a withholding period had cleared? `compliance`
+9. What is the recorded margin per hectare for each crop at the price we entered? `margins`
+10. Which products in the shed are expired, or short for open recommendations? `inventory`
+
+## Documents and views in your brand
+
+Edit `brand.json` for the business name, logo and colours. `npm run docs` renders spray application records, recommendation sheets and farm audit packs as HTML in `docs-out/`. They are working records, not certified documents. Draft commands write only to `drafts/`.
+
+`npm run view` renders the week (decisions, recommendations, re-entry), harvest readiness and recorded margins into `views/`. Open them or print to PDF. `/new-view` adds another.
+
+## Your first hour: ten things to ask for
+
+1. Put our farm, state or region and owner in the property book.
+2. Replace the demo fields with our field names and hectares, and note the sensitive neighbours.
+3. Load our chemical shed with stock, label rates, withholding periods and re-entry intervals.
+4. Import our Agworld fields, crops and spray history, then show me every gap.
+5. Put our logo and colours on the spray record.
+6. Add a boom height and nozzle type to every spray record.
+7. Change the scouting reminder from 14 days to 7 during spring.
+8. Add a buyer residue check to harvest readiness for our export barley.
+9. Add a view of recommendations by agronomist with how many were applied on time.
+10. Draft Monday's priorities from the decision list, recommendations and harvest check.
+
+`/customise` writes a new migration, applies it, updates the commands and tests the change.
+
+## Instead of Agworld
+
+[The switch guide](docs/replace-agworld.md) covers what to export from Agworld, the accepted headers, loading the shed first, the dry run, and what does not carry over (maps, imagery, machinery feeds, attachments). Bring fields, crops, spray history and harvest loads across in one command after a dry run, then reconcile before cancelling.
+
+## Tests
+
+`npm test` uses a disposable embedded database. It exercises all 36 CLI commands and asserts the spray gates, stock rollback on a refused spray, the 48 hour rule, the withholding boundary day, harvest refusals, recommendation linking, CSV dry run, replay and rollback, the shipped example exports, name ambiguity, drafts, documents and branded views. CI runs it on Linux and Windows.
 
 ## Architecture
 
@@ -92,7 +171,9 @@ cropping-for-claude-code/
   scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
   supabase/migrations/      plain SQL schema
   supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+  docs/                     compliance sources, the switch guide, research, the CLI reference
+  fixtures/agworld/         example exports the importer accepts
+  views.json documents.json the read-only views and the paperwork
 ```
 
 ## Built for coding agents
@@ -112,4 +193,4 @@ Enterprise DNA installs Cropping for Claude Code for your business, migrates you
 
 ## License
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+MIT. Copyright (c) 2026 Enterprise DNA. Agworld is named for comparison. This project is independent and not affiliated with Agworld or Semios.
